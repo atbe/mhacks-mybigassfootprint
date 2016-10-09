@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	//"bufio"
 
 	"github.com/ChimeraCoder/anaconda"
 )
@@ -39,13 +38,12 @@ func searchToUserInfo(user anaconda.User) userInfo {
 }
 
 type abe struct {
-	Search        string `json:"username"`
+	Search string `json:"username"`
 }
 
 func (db *API) firstPage(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if r.Method == "POST" {
-		//fmt.Println(bufio.NewReader(r.Body).ReadString('\n'))
 		var rep abe
 		if r.Body == nil {
 			http.Error(w, "Please send a request body", 402)
@@ -91,9 +89,9 @@ func main() {
 
 	CRT := os.Getenv("CRT")
 	KEY := os.Getenv("KEY")
-	for _, i := range []string{"CK", "CS", "AT", "ATS","CRT", "KEY"} {
+	for _, i := range []string{"CK", "CS", "AT", "ATS", "CRT", "KEY"} {
 		fmt.Println(os.Getenv(i))
 	}
-	log.Fatal(http.ListenAndServeTLS(":443", CRT, KEY,  nil))
+	log.Fatal(http.ListenAndServeTLS(":443", CRT, KEY, nil))
 	//log.Fatal(http.ListenAndServeTLS(":8080", "ssl/shellcode.in.crt", "ssl/shellcode.in.key",  nil))
 }
