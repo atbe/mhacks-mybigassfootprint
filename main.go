@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	//"bufio"
 
 	"github.com/ChimeraCoder/anaconda"
 )
@@ -37,22 +38,28 @@ func searchToUserInfo(user anaconda.User) userInfo {
 	}
 }
 
+type abe struct {
+	Search        string `json:"username"`
+}
+
 func (db *API) firstPage(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 	if r.Method == "POST" {
-		// get user name to find here
-		searchResult, err := db.api.GetUserSearch("coolbry", nil)
+		//fmt.Println(bufio.NewReader(r.Body).ReadString('\n'))
+		var rep abe
+		if r.Body == nil {
+			http.Error(w, "Please send a request body", 402)
+			return
+		}
+		err := json.NewDecoder(r.Body).Decode(&rep)
 		if err != nil {
 			fmt.Println(err)
+			return
 		}
-		userResult := []userInfo{}
-		for _, sr := range searchResult {
-			userResult = append(userResult, searchToUserInfo(sr))
-		}
-		json.NewEncoder(w).Encode(userResult)
-		return
-	} else if r.Method == "GET" {
-		// return webpage here
-		searchResult, err := db.api.GetUserSearch("coolbry", nil)
+		fmt.Println(rep)
+
+		// get user name to find here
+		searchResult, err := db.api.GetUserSearch(rep.Search, nil)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -80,10 +87,13 @@ func main() {
 
 	db := API{api: creds}
 
-	http.HandleFunc("/first", db.firstPage)
+	http.HandleFunc("/twitter_user_footprint", db.firstPage)
 
 	CRT := os.Getenv("CRT")
 	KEY := os.Getenv("KEY")
-	log.Fatal(http.ListenAndServeTLS(":8080", CRT, KEY,  nil))
+	for _, i := range []string{"CK", "CS", "AT", "ATS","CRT", "KEY"} {
+		fmt.Println(os.Getenv(i))
+	}
+	log.Fatal(http.ListenAndServeTLS(":443", CRT, KEY,  nil))
 	//log.Fatal(http.ListenAndServeTLS(":8080", "ssl/shellcode.in.crt", "ssl/shellcode.in.key",  nil))
 }
