@@ -1,14 +1,15 @@
 extends layout.jade
 
 block content
-  p Welcome to #{title}
+  h1 Welcome to #{title}
 
-  h1 Twitter
+  h2 Twitter
 
   form(action='/twitter_user_footprint', method='post')
     input(
       type='text'
       name='username'
+      autocomplete='off'
     )
     input(type='submit', value='Find Me', class='btn-success')
 
