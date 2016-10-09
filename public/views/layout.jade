@@ -1,7 +1,24 @@
 doctype html
+
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    meta(name='viewport', content='width=device-width', initial-scale='1')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js')
+    script(src=src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+
   body
+    nav(class='navbar navbar-inverse')
+      div(class='container-fluid')
+        div(class='navbar-header')
+          a(class='navbar-brand', href='/') My Big Ass Footprint
+        ul(class='nav navbar-nav')
+          li(class='active')
+            a(href='/') Home
+          li
+            a(href='https://github.com/atbe/mhacks-mybigassfootprint', target='_blank') Github
+          li
+            a(href='#') About
+
     block content

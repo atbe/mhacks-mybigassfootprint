@@ -1,11 +1,17 @@
-extends layout
+extends layout.jade
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Welcome to #{title}
+
+  h2 Twitter
+
+  form(action='/twitter_user_footprint', method='post')
+    input(
+      type='text'
+      name='username'
+      autocomplete='off'
+    )
+    input(type='submit', value='Find Me', class='btn-success')
+
+  p #{sorry_message}
   
-  if json_object
-    each tweet in json_object
-      div
-        li #{tweet.name}
-          
