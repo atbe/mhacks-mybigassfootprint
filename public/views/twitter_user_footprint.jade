@@ -1,0 +1,27 @@
+extends layout.jade
+
+block content
+  h1 #{twitter_user_footprint_title}
+  
+  if jsonObjectResponse
+
+    div(class="table-responsive")
+      table(class="table table-striped")
+          thead
+            td Name
+            td Location
+            td Description
+            td Favourites
+            td Followers
+            td Following
+            td Protected
+          tbody
+            each user in jsonObjectResponse
+              tr
+                td #{user.name}
+                td #{user.location}
+                td #{user.description}
+                td #{user.favourites_count}
+                td #{user.followers_count}
+                td #{user.friends_count}
+                td #{user.protected}
