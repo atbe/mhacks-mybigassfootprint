@@ -37,27 +37,26 @@ func searchToUserInfo(user anaconda.User) userInfo {
 	}
 }
 
-type abe struct {
+type searchRequest struct {
 	Search string `json:"username"`
 }
 
 func (db *API) firstPage(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if r.Method == "POST" {
-		var rep abe
+		var req searchRequest
 		if r.Body == nil {
 			http.Error(w, "Please send a request body", 402)
 			return
 		}
-		err := json.NewDecoder(r.Body).Decode(&rep)
+		err := json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		fmt.Println(rep)
 
 		// get user name to find here
-		searchResult, err := db.api.GetUserSearch(rep.Search, nil)
+		searchResult, err := db.api.GetUserSearch(req.Search, nil)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -65,8 +64,11 @@ func (db *API) firstPage(w http.ResponseWriter, r *http.Request) {
 		for _, sr := range searchResult {
 			userResult = append(userResult, searchToUserInfo(sr))
 		}
-		json.NewEncoder(w).Encode(userResult)
+		// return page load with data here
 		return
+	} else if r.Method == "GET" {
+		// return page load here
+
 	}
 }
 
@@ -93,5 +95,4 @@ func main() {
 		fmt.Println(os.Getenv(i))
 	}
 	log.Fatal(http.ListenAndServeTLS(":443", CRT, KEY, nil))
-	//log.Fatal(http.ListenAndServeTLS(":8080", "ssl/shellcode.in.crt", "ssl/shellcode.in.key",  nil))
 }
