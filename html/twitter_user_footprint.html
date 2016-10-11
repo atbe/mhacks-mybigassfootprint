@@ -18,6 +18,33 @@
         </ul>
       </div>
     </nav>
+	<div class="table-responsive">
+		<table class="table-responsive">
+			<tr>
+				<th>Name</th>
+				<th>Location</th>
+				<th>Description</th>
+				<th>Favourites</th>
+				<th>Followers</th>
+				<th>Following</th>
+				<th>Protected</th>
+			</tr>
+			{{range .}}
+			<tr>
+				<td>
+					{{.Name}}
+					{{.Location}}
+					{{.Description}}
+					{{.Favourites}}
+					{{.Followers}}
+					{{.Following}}
+					{{.Protected}}
+				</td>
+			</tr>
+			{{end}}
+		</table>
+
+	</div>
     <h1></h1>
   </body>
 </html>

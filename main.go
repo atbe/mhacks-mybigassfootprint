@@ -1,8 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -44,17 +45,12 @@ type searchRequest struct {
 func (db *API) firstPage(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if r.Method == "POST" {
-		var req searchRequest
-		if r.Body == nil {
-			http.Error(w, "Please send a request body", 402)
-			return
-		}
-		err := json.NewDecoder(r.Body).Decode(&req)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
 
+		r.ParseForm()
+		fmt.Println(r.Form.Get("username"))
+		req := searchRequest{
+			Search: r.Form.Get("username"),
+		}
 		// get user name to find here
 		searchResult, err := db.api.GetUserSearch(req.Search, nil)
 		if err != nil {
@@ -64,12 +60,49 @@ func (db *API) firstPage(w http.ResponseWriter, r *http.Request) {
 		for _, sr := range searchResult {
 			userResult = append(userResult, searchToUserInfo(sr))
 		}
+		t := template.Must(template.New("").ParseFiles("html/twitter_user_footprint.html"))
+		err = t.Execute(w, userResult)
+		if err != nil {
+			fmt.Println(err)
+		}
 		// return page load with data here
 		return
 	} else if r.Method == "GET" {
 		// return page load here
 
 	}
+}
+
+func index(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		// check url here
+		if r.URL.Path != "/" {
+			return
+		}
+		//serve index here
+		indexFile, err := ioutil.ReadFile("./html/index.html")
+		if err != nil {
+			http.Error(w, "Error finding index.html", 400)
+		}
+		w.Write(indexFile)
+	}
+
+}
+
+func about(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "GET" {
+		// check url here
+		if r.URL.Path != "/about" {
+			return
+		}
+		//serve index here
+		aboutFile, err := ioutil.ReadFile("./html/about.html")
+		if err != nil {
+			http.Error(w, "Error finding index.html", 400)
+		}
+		w.Write(aboutFile)
+	}
+
 }
 
 type API struct {
@@ -88,11 +121,13 @@ func main() {
 	db := API{api: creds}
 
 	http.HandleFunc("/twitter_user_footprint", db.firstPage)
+	http.HandleFunc("/", index)
+	http.HandleFunc("/about", about)
 
-	CRT := os.Getenv("CRT")
-	KEY := os.Getenv("KEY")
+	//CRT := os.Getenv("CRT")
+	//KEY := os.Getenv("KEY")
 	for _, i := range []string{"CK", "CS", "AT", "ATS", "CRT", "KEY"} {
 		fmt.Println(os.Getenv(i))
 	}
-	log.Fatal(http.ListenAndServeTLS(":443", CRT, KEY, nil))
+	log.Fatal(http.ListenAndServeTLS(":8443", "ssl/shellcode.in.crt", "ssl/shellcode.in.key", nil))
 }
