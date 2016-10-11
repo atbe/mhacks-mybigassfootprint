@@ -80,9 +80,10 @@ func index(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		//serve index here
-		indexFile, err := ioutil.ReadFile("./html/index.html")
+		indexFile, err := ioutil.ReadFile("html/index.html")
 		if err != nil {
 			http.Error(w, "Error finding index.html", 400)
+			fmt.Println(err)
 		}
 		w.Write(indexFile)
 	}
@@ -96,7 +97,7 @@ func about(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		//serve index here
-		aboutFile, err := ioutil.ReadFile("./html/about.html")
+		aboutFile, err := ioutil.ReadFile("html/about.html")
 		if err != nil {
 			http.Error(w, "Error finding index.html", 400)
 		}
@@ -124,10 +125,11 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/about", about)
 
-	//CRT := os.Getenv("CRT")
-	//KEY := os.Getenv("KEY")
+	CRT := os.Getenv("CRT")
+	KEY := os.Getenv("KEY")
 	for _, i := range []string{"CK", "CS", "AT", "ATS", "CRT", "KEY"} {
 		fmt.Println(os.Getenv(i))
 	}
-	log.Fatal(http.ListenAndServeTLS(":8443", "ssl/shellcode.in.crt", "ssl/shellcode.in.key", nil))
+	//log.Fatal(http.ListenAndServeTLS(":8443", "ssl/shellcode.in.crt", "ssl/shellcode.in.key", nil))
+	log.Fatal(http.ListenAndServeTLS(":8443", CRT, KEY, nil))
 }
