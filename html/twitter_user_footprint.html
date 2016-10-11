@@ -20,6 +20,7 @@
     </nav>
 	<div class="table-responsive">
 		<table class="table-striped">
+			<thead>
 			<tr>
 				<th>Name</th>
 				<th>Location</th>
@@ -29,19 +30,34 @@
 				<th>Following</th>
 				<th>Protected</th>
 			</tr>
-			{{range .}}
+			</thead>
+			<tbody>
 			<tr>
+			{{range .}}
 				<td>
 					{{.Name}}
+				</td>
+				<td>
 					{{.Location}}
+				</td>
+				<td>
 					{{.Description}}
-					{{.Favourites}}
-					{{.Followers}}
-					{{.Following}}
+				</td>
+				<td>
+					{{.FavouritesCount}}
+				</td>
+				<td>
+					{{.FollowersCount}}
+				</td>
+				<td>
+					{{.FriendsCount}}
+				</td>
+				<td>
 					{{.Protected}}
 				</td>
 			</tr>
 			{{end}}
+			</tbody>
 		</table>
 	</div>
     <h1></h1>
