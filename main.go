@@ -60,7 +60,7 @@ func (db *API) firstPage(w http.ResponseWriter, r *http.Request) {
 		for _, sr := range searchResult {
 			userResult = append(userResult, searchToUserInfo(sr))
 		}
-		t := template.Must(template.New("").ParseFiles("html/twitter_user_footprint.html"))
+		t := template.Must(template.ParseFiles("html/twitter_user_footprint.html"))
 		err = t.Execute(w, userResult)
 		if err != nil {
 			fmt.Println(err)
@@ -127,6 +127,7 @@ func main() {
 
 	CRT := os.Getenv("CRT")
 	KEY := os.Getenv("KEY")
+	fmt.Println(CRT, KEY)
 	for _, i := range []string{"CK", "CS", "AT", "ATS", "CRT", "KEY"} {
 		fmt.Println(os.Getenv(i))
 	}
